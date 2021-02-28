@@ -53,20 +53,17 @@ def make_adj_list(courses):
 """
 def dfs(graph, start, visited, order, current_order):
     visited.add(start)
-    for node in graph[start]: 
-        if node not in visited:
-            dfs(graph, node, visited, order, current_order)
-    
-    if start in graph: 
-        for node in graph[start]:
+
+    if start in graph:
+        for node in graph[start]: 
             if node not in visited:
                 dfs(graph, node, visited, order, current_order)
-    
+
     order[current_order[0]] = start
     current_order[0] = current_order[0] - 1
 
 """
-    Performs and outputs a topological sort of graph G using dfs
+    Topological sort dengan DFS
     Input: adjacency list, topological order dari node
 """
 def topological_sort(graph, order):
