@@ -1,15 +1,12 @@
 """
-    Course Organizer w/ Toposort using Python
+    Course Organizer w/ Toposort
     Author: Rayhan Alghifari Fauzta (13519039)
-    References: 
-        - https://www.geeksforgeeks.org/topological-sorting/
-        - https://www.youtube.com/watch?v=eL-KzMXSXXI
-        - https://stackoverflow.com/questions/15038876/topological-sort-python
 """
 
 """ 
     Read from file
-    Proses: membersihkan tanda koma dan titik dari masukan file
+    Input: -
+    Process: remove comma and stop from input file
     Output: list of courses 
 """
 def read_file():
@@ -29,10 +26,10 @@ def read_file():
     
 
 """ 
-    Create adjacency list from list of courses
+    Create adjacency list
     Input: list of courses
-    Proses: untuk setiap elemen list of courses, diambil course pertama sebagai keys dan course setelahnya sebagai values
-    Output: adjacency list in the form dictionary
+    Process: take first element of course as key and its prerequisites as values
+    Output: adjacency list (dictionary)
 """
 def make_adj_list(courses):
     adj = {}
@@ -42,58 +39,64 @@ def make_adj_list(courses):
 
     return adj
 
-"""
-    Algoritma depth first search dalam graph
-    Input: 
-    graph - input graf dalam bentuk adjacency list yg disimpan pada dictionary
-    start - starting node
-    visited - kumpulan node yg sudah dikunjungi, disimpan dalam bentuk set
-    order - topological order dari node-node dalam graph, disimpan dalam bentuk dict
-    current_order - order yg sedang dikunjungi, disimpan dalam bentuk list
-"""
-def dfs(graph, start, visited, order, current_order):
-    visited.add(start)
 
-    if start in graph:
-        for node in graph[start]: 
-            if node not in visited:
-                dfs(graph, node, visited, order, current_order)
+'''
+    Topological sorting algorithm
+    Input: adjacency list (dict), empty list of list, current iteration number (start from 0)
+    Process: 
+        1. find any node with zero incoming edge
+        2. add the node to list with index according to iteration number
+        3. make a copy of adjacency list, delete previously visited node as well as any edges containing its value
+        4. repeat until all nodes are visited
+    Output: list of courses per semester (list of list)
+'''
+def toposort(adj, list_smt, cur_smt):
+    if (adj):
+        for k, v in adj.items():
+            if (len(adj[k]) == 0):
+                list_smt[cur_smt].append(k)
 
-    order[current_order[0]] = start
-    current_order[0] = current_order[0] - 1
+        adj2 = adj.copy()
+        for element in list_smt:
+            for course in element:
+                for k in list(adj2):
+                    if k == course:
+                        del adj2[k]
+                for v in adj2.values():
+                    for val in v:
+                        if course in val:
+                            v.remove(course)
 
-"""
-    Topological sort dengan DFS
-    Input: adjacency list, topological order dari node
-"""
-def topological_sort(graph, order):
-    visited = set()
-    current_order = [len(graph)]
-    for node in graph.keys():
-        if node not in visited:
-            dfs(graph, node, visited, order, current_order)
+        toposort(adj2, list_smt, cur_smt + 1)
+        return list_smt
 
-""" solver """
-def dec_and_conq(adj_list):
-    order_dict = dict()
-    topological_sort(adj_list, order_dict)
-    result = iter(sorted(order_dict.items(), reverse = True))
 
-    return result
-
-""" print course per semester """
+'''
+    Print result with the following style:
+        Semester 1: a, b,
+        Semester 2: e, f, g, h
+        Semester 3: i
+            and so on
+    Input: courses per semester (list of list)
+    Process: printing result according to specified format
+    Output: result printed
+'''
 def print_result(result):
     sem = 1
-    for __, node in result:
-        print("Semester {}: ".format(sem), end='')
-        print(node + ' ')
-        sem += 1
+    for courses in result:
+        if courses:
+            course = ", ".join(courses)
+            print("Semester {}:".format(sem), course)
+            sem += 1
 
-""" main program """
-def main() :
-    file = read_file()
-    adj_list = make_adj_list(file)
-    result = dec_and_conq(adj_list)
+
+''' main program '''
+def main():
+    f = read_file()
+    adj = make_adj_list(f)
+    list_smt = [[] for _ in range(8)]
+    cur_smt = 0
+    result = toposort(adj, list_smt, cur_smt)
     print_result(result)
 
 if __name__ == "__main__":
