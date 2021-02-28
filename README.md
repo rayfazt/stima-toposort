@@ -19,6 +19,7 @@ Semester III : C4
 Semester IV : C2
 Semester V : C5.
 ```
+Penyusunan dilakukan dengan membuat adjacency list dari input mata kuliah beserta prerequisitesnya menggunakan dictionary Python. Key adalah mata kuliah yang akan diambil dan values adalah prerequisites dari mata kuliah tersebut. Setelah itu, dilakukan topological sorting mulai dari node dengan derajat masuk 0 dan mengurangkan derajat masuk node lain yang incoming edgenya mengandung node awal tadi. Hal ini diulangi hingga seluruh node dikunjungi dan akan didapat list mata kuliah per semester yang diinginkan.
 
 
 ## Requirements
