@@ -1,14 +1,14 @@
-"""
+'''
     Course Organizer w/ Toposort
     Author: Rayhan Alghifari Fauzta (13519039)
-"""
+'''
 
-""" 
+''' 
     Read from file
     Input: -
     Process: remove comma and stop from input file
     Output: list of courses 
-"""
+'''
 def read_file():
     filename = input('Masukkan test case (tanpa ".txt"): ')
     with open("../test/" + filename + ".txt") as f:
@@ -25,12 +25,12 @@ def read_file():
     return clear_stop
     
 
-""" 
+''' 
     Create adjacency list
     Input: list of courses
     Process: take first element of course as key and its prerequisites as values
     Output: adjacency list (dictionary)
-"""
+'''
 def make_adj_list(courses):
     adj = {}
     for course in courses:
